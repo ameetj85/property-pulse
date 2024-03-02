@@ -2,6 +2,8 @@
 
 To generate NEXTAUTH_SECRET run "openssl rand -base64 32" on the command line
 
+Use this command when files do not upload to github with the correct casing: git rm --cached components/navbar.jsx
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
