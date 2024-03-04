@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 const PropertyAddForm = () => {
   const [mounted, setMounted] = useState(false);
+  const [imvalidImageCount, setInvalidImageCount] = useState(false);
   const [fields, setFields] = useState({
     type: 'Apartment',
     name: 'Test Property',
@@ -34,6 +35,7 @@ const PropertyAddForm = () => {
   // this prevents console warnings to show up at runtime complaining about html and server.
   useEffect(() => {
     setMounted(true);
+    setInvalidImageCount(false);
   }, []);
 
   const handleChange = (e) => {
@@ -86,12 +88,26 @@ const PropertyAddForm = () => {
   const handleImageChange = (e) => {
     const { files } = e.target;
 
-    // clone images array
-    const updatedImages = [...fields.images];
+    if (files.length > 2) {
+      setInvalidImageCount(true);
+    } else {
+      setInvalidImageCount(false);
+    }
 
-    // add new files to array
+    // clone images array
+    // const updatedImages = [...fields.images];
+
+    // we are going to overwrite prev selections
+    const updatedImages = [];
+
+    let count = 0;
+    // add new files to array - limit to 2 image files only.
     for (const file of files) {
+      count++;
       updatedImages.push(file);
+      if (count === 2) {
+        break;
+      }
     }
 
     // update state with array of images
@@ -559,7 +575,7 @@ const PropertyAddForm = () => {
             htmlFor='images'
             className='block text-gray-700 font-bold mb-2'
           >
-            Images (Select up to 4 images)
+            Images (Select up to 2 images)
           </label>
           <input
             type='file'
@@ -571,15 +587,33 @@ const PropertyAddForm = () => {
             onChange={handleImageChange}
             required
           />
+          <div>
+            {imvalidImageCount && (
+              <p className='text-red-500'>
+                Please do not select more than 2 files.
+              </p>
+            )}
+          </div>
         </div>
 
         <div>
-          <button
-            className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
-            type='submit'
-          >
-            Add Property
-          </button>
+          {imvalidImageCount ? (
+            <button
+              className='bg-blue-500 text-white font-bold py-2 px-4 rounded-full w-full'
+              type='submit'
+              disabled
+            >
+              Add Property
+            </button>
+          ) : (
+            <button
+              className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+              type='submit'
+              disabled
+            >
+              Add Property
+            </button>
+          )}
         </div>
       </form>
     )

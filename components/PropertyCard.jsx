@@ -21,10 +21,19 @@ const PropertyCard = ({ property }) => {
     }
   };
 
+  // We want to retain our test properties, whose images are stored on disc.
+  // We also want to show our images that stared in Cloudinary.
+  let imagePath = `/images/properties/${property.images[0]}`;
+  if (property.images[0].includes('https')) {
+    imagePath = property.images[0];
+  }
+
+  console.log(imagePath);
+
   return (
     <div className='rounded-xl shadow-md relative'>
       <Image
-        src={`/images/properties/${property.images[0]}`}
+        src={imagePath}
         alt=''
         sizes='100vw'
         height={0}
