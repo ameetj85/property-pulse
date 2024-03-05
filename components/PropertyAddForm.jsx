@@ -6,27 +6,27 @@ const PropertyAddForm = () => {
   const [mounted, setMounted] = useState(false);
   const [imvalidImageCount, setInvalidImageCount] = useState(false);
   const [fields, setFields] = useState({
-    type: 'Apartment',
-    name: 'Test Property',
+    type: '',
+    name: '',
     description: '',
     location: {
       street: '',
-      city: 'Test City',
-      state: 'Test State',
+      city: '',
+      state: '',
       zipcode: '',
     },
-    beds: '3',
-    baths: '2',
-    square_feet: '1800',
-    amenities: ['Free Parking', 'Wifi', 'Hot Tub', 'Smart TV'],
+    beds: '',
+    baths: '',
+    square_feet: '',
+    amenities: [],
     rates: {
       weekly: '',
-      monthly: '2000',
+      monthly: '',
       nightly: '',
     },
     seller_info: {
       name: '',
-      email: 'test@test.com',
+      email: '',
       phone: '',
     },
     images: [],
@@ -609,7 +609,6 @@ const PropertyAddForm = () => {
             <button
               className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
               type='submit'
-              disabled
             >
               Add Property
             </button>
