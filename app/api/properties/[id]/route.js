@@ -1,5 +1,6 @@
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
+import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 
 // GET /api/properties/:id
@@ -21,43 +22,108 @@ export const GET = async (req, { params }) => {
 };
 
 // DELETE /api/properties/:id
-export const DELETE = async (req, { params }) => {
+export const DELETE = async (request, { params }) => {
   try {
     const propertyId = params.id;
 
-    const session = await getSessionUser();
+    const sessionUser = await getSessionUser();
 
-    // console.log('Session', session);
-
-    if (!session || !session.userId) {
-      return new Response('User ID is required.', { status: 401 });
+    // Check for session
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response('User ID is required', { status: 401 });
     }
 
-    const { userId } = session.userId;
+    const { userId } = sessionUser;
 
     await connectDB();
 
     const property = await Property.findById(propertyId);
 
-    // console.log('Property:', property);
-    console.log('Property owner:', property.owner.toString());
-    console.log('Session User Id:', session.userId);
+    if (!property) return new Response('Property Not Found', { status: 404 });
 
-    if (!property) {
-      return new Response('Property Not Found.', { status: 404 });
-    }
-
-    // verify that the user id fpor the property mayches the user id of the user that is logged in
+    // Verify ownership
     if (property.owner.toString() !== userId) {
-      return new Response('Unauthorised!', { status: 401 });
+      return new Response('Unauthorized', { status: 401 });
     }
 
     await property.deleteOne();
-    // Property.deleteOne({ _id: property._id });
 
-    return new Response('Property deleted.', { staus: 200 });
+    return new Response('Property Deleted', {
+      status: 200,
+    });
   } catch (error) {
-    console.log('Error deleting property: ' + error);
-    return new Response('Something went wrong.', { status: 500 });
+    console.log(error);
+    return new Response('Something Went Wrong', { status: 500 });
+  }
+};
+
+// PUT /api/properties/:id
+export const PUT = async (req, { params }) => {
+  try {
+    await connectDB();
+
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.userId) {
+      return new Response('User id is required.', { status: 401 });
+    }
+
+    const { id } = params;
+    const { userId } = sessionUser;
+
+    const formData = await req.formData();
+
+    // access all values from amenities
+    const amenities = formData.getAll('amenities');
+
+    // get property to update
+    const existingProperty = await Property.findById(id);
+
+    if (!existingProperty) {
+      return new Response('Property does not exist!', { status: 404 });
+    }
+
+    // Verify ownership
+    if (existingProperty.owner.toString() != userId) {
+      return new Response('Unauthorised!', { status: 401 });
+    }
+
+    // create property data object for db
+    const propertyData = {
+      type: formData.get('type'),
+      name: formData.get('name'),
+      description: formData.get('description'),
+      location: {
+        street: formData.get('location.street'),
+        city: formData.get('location.city'),
+        state: formData.get('location.state'),
+        zipcode: formData.get('location.zipcode'),
+      },
+      beds: formData.get('beds'),
+      baths: formData.get('baths'),
+      square_feet: formData.get('square_feet'),
+      amenities,
+      rates: {
+        weekly: formData.get('rates.weekly'),
+        monthly: formData.get('rates.monthly'),
+        nightly: formData.get('rates.nightly'),
+      },
+      seller_info: {
+        name: formData.get('seller_info.name'),
+        email: formData.get('seller_info.email'),
+        phone: formData.get('seller_info.phone'),
+      },
+      owner: userId,
+    };
+
+    // update property in db
+    const updatedProperty = await Property.findByIdAndUpdate(id, propertyData);
+
+    return new Response(JSON.stringify(updatedProperty), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response('Failed to add property.', { status: 500 });
   }
 };

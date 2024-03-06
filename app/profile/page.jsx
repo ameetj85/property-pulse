@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const profileName = session?.user?.name;
   const profileEmail = session?.user?.email;
 
-  const [properties, setProperties] = useState('');
+  const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,40 +51,31 @@ const ProfilePage = () => {
 
   const handleDeleteProperty = async (propertyId) => {
     const confirmed = window.confirm(
-      'Are you sure that you want to delete this property?'
+      'Are you sure you want to delete this property?'
     );
 
-    if (!confirmed) {
-      return;
-    }
-
-    console.log('Property Id:', propertyId);
+    if (!confirmed) return;
 
     try {
       const res = await fetch(`/api/properties/${propertyId}`, {
         method: 'DELETE',
       });
 
-      console.log('Return Status:', res.status, res);
-
       if (res.status === 200) {
-        // remove property from UI
+        // Remove the property from state
         const updatedProperties = properties.filter(
-          (p) => p._id !== propertyId
+          (property) => property._id !== propertyId
         );
 
         setProperties(updatedProperties);
 
-        toast.success('Property Deleted!', toastOptions);
+        toast.success('Property Deleted', toastOptions);
       } else {
-        toast.error(
-          'Failed to delete property: ' + res.status + ' : ' + res.statusText,
-          toastOptions
-        );
+        toast.error('Failed to delete property', toastOptions);
       }
     } catch (error) {
       console.log(error);
-      toast.error('Exception: Failed to delete property.', toastOptions);
+      toast.error('Failed to delete property'), toastOptions;
     }
   };
 

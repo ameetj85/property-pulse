@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 let connected = false;
 
 const connectDB = async () => {
+  /*
+    const mongoose = require('mongoose');​
+    mongoose.connect('ConnectionString', {useNewUrlParser: true, useUnifiedTopology: true});
+  */
   mongoose.set('strictQuery', true);
 
   // if db is already connected dont reconnect
@@ -13,11 +17,17 @@ const connectDB = async () => {
 
   // connect to Mongo DB
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     connected = true;
     console.log('Mongo DB connected.');
   } catch (error) {
-    console.log(error);
+    console.log(
+      '***************** Failed to connect to MongoDB ! ***************** '
+    );
+    console.error(error);
   }
 };
 
