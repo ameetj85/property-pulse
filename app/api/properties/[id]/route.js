@@ -40,6 +40,8 @@ export const DELETE = async (req, { params }) => {
     const property = await Property.findById(propertyId);
 
     // console.log('Property:', property);
+    console.log('Property owner:', property.owner.toString());
+    console.log('Session User Id:', session.userId);
 
     if (!property) {
       return new Response('Property Not Found.', { status: 404 });
