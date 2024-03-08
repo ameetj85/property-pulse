@@ -10,8 +10,6 @@ const PropertyHeaderImage = ({ image }) => {
     imagePath = image;
   }
 
-  console.log(image);
-
   return (
     <section>
       <div className='container-xl m-auto'>

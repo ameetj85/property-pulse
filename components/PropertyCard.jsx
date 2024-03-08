@@ -28,8 +28,6 @@ const PropertyCard = ({ property }) => {
     imagePath = property.images[0];
   }
 
-  console.log(imagePath);
-
   return (
     <div className='rounded-xl shadow-md relative'>
       <Image
