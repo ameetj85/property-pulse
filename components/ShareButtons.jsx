@@ -44,6 +44,8 @@ const ShareButtons = ({ property }) => {
         </WhatsappShareButton>
 
         <EmailShareButton
+          onClick={() => {}}
+          openShareDialogOnClick
           url={shareUrl}
           subject={property.name}
           body={`Check out this property listing: ${shareUrl}`}
