@@ -21,8 +21,8 @@ export const GET = async () => {
 
     const readMessages = await Message.find({ recipient: userId, read: true })
       .sort({ createdAt: -1 }) // Sort read messages in asc order
-      .populate('sender', 'username')
-      .populate('property', 'name');
+      .populate('sender', 'username') // get username from user
+      .populate('property', 'name'); // get name from property
 
     const unreadMessages = await Message.find({
       recipient: userId,
