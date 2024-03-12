@@ -1,11 +1,15 @@
-import React from 'react';
 import { fetchProperties } from '@/utils/requests';
-import FeaturedPropertyCard from '@/components/FeaturedPropertyCard';
+import FeaturedPropertyCard from './FeaturedPropertyCard';
 
 const FeaturedProperties = async () => {
-  const properties = await fetchProperties({
+  const featuredProperties = await fetchProperties({
     showFeatured: true,
   });
+
+  // the showFeastured param above is not working, hence we filter the results here.
+  const properties = featuredProperties.filter(
+    (property) => property.isFeatured === true
+  );
 
   return (
     properties.length > 0 && (
@@ -24,5 +28,4 @@ const FeaturedProperties = async () => {
     )
   );
 };
-
 export default FeaturedProperties;

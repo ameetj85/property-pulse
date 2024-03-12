@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-  FaMoneyBill,
-  FaMapMarker,
-} from 'react-icons/fa';
+import { FaBed, FaBath, FaRulerCombined, FaMoneyBill } from 'react-icons/fa';
 
 const FeaturedPropertyCard = ({ property }) => {
   const getRateDisplay = () => {

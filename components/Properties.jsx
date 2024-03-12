@@ -5,26 +5,19 @@ import PropertyCard from '@/components/PropertyCard';
 import Spinner from '@/components/Spinner';
 import Pagination from './Pagination';
 
-const Properties = () => {
-  // console.log('process.env:', process.env.PROPERTIES_PAGE_SIZE);
-
+const Properties = ({ defaultPageSize }) => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const pageSize = process.env.PROPERTIES_PAGE_SIZE || 6;
+  const pageSize = defaultPageSize || 3;
   const [totalItems, setTotalItems] = useState(0);
-
-  // console.log('PageSize:', pageSize);
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        console.log(
-          'API call:',
-          `/api/properties?page=${page}&pageSize=${pageSize}`
-        );
         const res = await fetch(
-          `/api/properties?page=${page}&pageSize=${pageSize}`
+          `/api/properties?page=${page}&pageSize=${pageSize}`,
+          { cache: 'no-store' }
         );
 
         if (!res) {

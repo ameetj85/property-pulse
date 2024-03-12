@@ -15,7 +15,7 @@ const PropertiesPage = async () => {
         </div>
       </section>
 
-      <Properties />
+      <Properties defaultPageSize={process.env.PROPERTIES_PAGE_SIZE} />
     </>
   );
 };
